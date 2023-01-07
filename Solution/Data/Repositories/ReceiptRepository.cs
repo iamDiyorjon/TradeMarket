@@ -42,13 +42,15 @@ namespace Data.Repositories
             Task.FromResult(context.Receipts.AsEnumerable());
 
 
-        public Task<IEnumerable<Receipt>> GetAllWithDetailsAsync()
+        public  Task<IEnumerable<Receipt>> GetAllWithDetailsAsync()
         {
-            var result = context.Receipts
-                .Include(re => re.ReceiptDetails)
-                .Include(re => re.Customer).AsEnumerable();
-           return Task.FromResult(result);
-           
+            var result=context.Receipts
+                .Include(cu=>cu.Customer)
+                .Include(rd=>rd.ReceiptDetails)
+                .ThenInclude(p=>p.Product)
+                .ThenInclude(c=>c.Category)
+                .AsEnumerable();
+            return Task.FromResult(result);
         }
 
         public Task<Receipt> GetByIdAsync(int id)=>
