@@ -18,12 +18,10 @@ namespace Data.Repositories
             this.context = context;
         }
 
-        public Task AddAsync(Receipt entity)
+        public async Task AddAsync(Receipt entity)
         {
             context.Add(entity);
-            context.SaveChanges();
-            return Task.CompletedTask;
-
+           await context.SaveChangesAsync();     
         }
 
         public void Delete(Receipt entity)
@@ -41,7 +39,6 @@ namespace Data.Repositories
         public Task<IEnumerable<Receipt>> GetAllAsync()=>
             Task.FromResult(context.Receipts.AsEnumerable());
 
-
         public  Task<IEnumerable<Receipt>> GetAllWithDetailsAsync()
         {
             var result=context.Receipts
@@ -56,7 +53,6 @@ namespace Data.Repositories
         public Task<Receipt> GetByIdAsync(int id)=>
             Task.FromResult(context.Receipts.Find(id));
         
-
         public async Task<Receipt> GetByIdWithDetailsAsync(int id)
         {
             return await context.Receipts
