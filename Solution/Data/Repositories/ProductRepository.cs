@@ -33,22 +33,27 @@ namespace Data.Repositories
         public Task DeleteByIdAsync(int id) =>
             Task.FromResult(context.Remove(context.Products.Find(id)));
 
-        public Task<IEnumerable<Product>> GetAllAsync()=>
+        public Task<IEnumerable<Product>> GetAllAsync() =>
             Task.FromResult(context.Products.AsEnumerable());
 
-        public Task<IEnumerable<Product>> GetAllWithDetailsAsync()=>
+        public Task<IEnumerable<Product>> GetAllWithDetailsAsync() =>
             Task.FromResult(context.Products
-                .Include(pro=>pro.Category)
-                .Include(pro=>pro.ReceiptDetails)
+                .Include(pro => pro.Category)
+                .Include(pro => pro.ReceiptDetails)
                 .AsEnumerable());
 
         public Task<Product> GetByIdAsync(int id) =>
             Task.FromResult(context.Products.Find(id));
 
-        public Task<Product> GetByIdWithDetailsAsync(int id)
+        public async Task<Product> GetByIdWithDetailsAsync(int id) 
         {
-            throw new NotImplementedException();
-        }
+           return await context.Products
+                .Include(re => re.Category)
+                .Include(re => re.ReceiptDetails)
+                .ThenInclude(re => re.Receipt)
+                .FirstOrDefaultAsync(re => re.Id == id);
+
+        } 
 
         public void Update(Product entity)
         {

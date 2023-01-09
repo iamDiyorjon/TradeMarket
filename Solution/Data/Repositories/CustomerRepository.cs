@@ -13,16 +13,15 @@ namespace Data.Repositories
     {
         private readonly TradeMarketDbContext context;
 
-        public CustomerRepository(TradeMarketDbContext context)
-        {
+        public CustomerRepository(TradeMarketDbContext context)=>
             this.context = context;
-        }
+        
 
-        public Task AddAsync(Customer entity)
+        public async Task AddAsync(Customer entity)
         {
             context.Entry(entity).State = EntityState.Added;
-            context.SaveChanges();
-            return Task.CompletedTask;
+           await context.SaveChangesAsync();
+           
         }
 
         public void Delete(Customer entity)
@@ -39,26 +38,25 @@ namespace Data.Repositories
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<Customer>> GetAllAsync()
-        {
-            return Task.FromResult(context.Customers.AsEnumerable());
-        }
+        public Task<IEnumerable<Customer>> GetAllAsync()=>
+            Task.FromResult(context.Customers.AsEnumerable());
 
-        public Task<IEnumerable<Customer>> GetAllWithDetailsAsync()
-        {
-            throw new NotImplementedException();
-            
-        }
+        public Task<IEnumerable<Customer>> GetAllWithDetailsAsync()=>
+            Task.FromResult(context.Customers
+                .Include(per => per.Person)
+                .Include(re => re.Receipts)
+                .ThenInclude(de => de.ReceiptDetails)
+                .AsEnumerable());
 
-        public Task<Customer> GetByIdAsync(int id)
-        {
-            return Task.FromResult(context.Customers.Find(id));
-        }
+        public Task<Customer> GetByIdAsync(int id)=>
+             Task.FromResult(context.Customers.Find(id));
 
-        public Task<Customer> GetByIdWithDetailsAsync(int id)
-        {
-           throw null;
-        }
+        public Task<Customer> GetByIdWithDetailsAsync(int id)=>
+            Task.FromResult(context.Customers.Include(per => per.Person)
+                .Include(re => re.Receipts)
+                .ThenInclude(de => de.ReceiptDetails)
+                .Where(de => de.Id == id)
+                .FirstOrDefault());
 
         public void Update(Customer entity)
         {

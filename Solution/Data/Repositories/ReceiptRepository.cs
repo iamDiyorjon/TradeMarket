@@ -57,9 +57,14 @@ namespace Data.Repositories
             Task.FromResult(context.Receipts.Find(id));
         
 
-        public Task<Receipt> GetByIdWithDetailsAsync(int id)
+        public async Task<Receipt> GetByIdWithDetailsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await context.Receipts
+                .Include(receipt => receipt.Customer)
+                .Include(receipt => receipt.ReceiptDetails)
+                .ThenInclude(receiptDetails => receiptDetails.Product)
+                .ThenInclude(product => product.Category)
+                .FirstOrDefaultAsync(receipt => receipt.Id == id);
         }
 
         public void Update(Receipt entity) =>
