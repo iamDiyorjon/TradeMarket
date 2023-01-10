@@ -41,18 +41,18 @@ namespace Data.Repositories
         public Task<IEnumerable<Customer>> GetAllAsync()=>
             Task.FromResult(context.Customers.AsEnumerable());
 
-        public Task<IEnumerable<Customer>> GetAllWithDetailsAsync()=>
-            Task.FromResult(context.Customers
+        public async Task<IEnumerable<Customer>> GetAllWithDetailsAsync()=>
+         await   Task.FromResult(context.Customers
                 .Include(per => per.Person)
                 .Include(re => re.Receipts)
                 .ThenInclude(de => de.ReceiptDetails)
                 .AsEnumerable());
 
-        public Task<Customer> GetByIdAsync(int id)=>
-             Task.FromResult(context.Customers.Find(id));
+        public async Task<Customer> GetByIdAsync(int id)=>
+           await  Task.FromResult(context.Customers.Find(id));
 
-        public Task<Customer> GetByIdWithDetailsAsync(int id)=>
-            Task.FromResult(context.Customers.Include(per => per.Person)
+        public  async Task<Customer> GetByIdWithDetailsAsync(int id)=>
+          await  Task.FromResult(context.Customers.Include(per => per.Person)
                 .Include(re => re.Receipts)
                 .ThenInclude(de => de.ReceiptDetails)
                 .Where(de => de.Id == id)

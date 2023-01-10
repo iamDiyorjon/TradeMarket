@@ -14,8 +14,7 @@ namespace Data.Data
         //}
         public TradeMarketDbContext(DbContextOptions<TradeMarketDbContext> options) 
             : base(options)
-        {
-        }
+        { }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<Product> Products { get; set; }
