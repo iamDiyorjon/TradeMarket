@@ -8,6 +8,12 @@ namespace Data.Data
 {
     class UnitOfWork : IUnitOfWork
     {
+        private readonly TradeMarketDbContext context;
+        public UnitOfWork(TradeMarketDbContext context)
+        {
+            this.context = context;
+        }
+
         public ICustomerRepository CustomerRepository => throw new NotImplementedException();
 
         public IPersonRepository PersonRepository => throw new NotImplementedException();
